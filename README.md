@@ -1,11 +1,11 @@
 # etcd-spring-app
 spring 3.0.4, etcd, docker compose, java 19
 
-1. ./build.sh
+a. ./build.sh
 
-2 ./run.sh
+b. ./run.sh
 
-simple access http://localhost:5076/swagger-ui.html
+c. http://localhost:5076/swagger-ui.html
 
 # Description
 

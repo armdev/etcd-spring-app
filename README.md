@@ -1,13 +1,13 @@
 # etcd-spring-app
 spring 3.0.4, etcd, docker compose, java 19
 
-# ./build.sh
+1. ./build.sh
 
-# ./run.sh
+2 ./run.sh
 
 simple access http://localhost:5076/swagger-ui.html
 
-# description
+# Description
 
 etcd is commonly used for coordinating distributed systems. It provides a reliable and consistent way to store and retrieve key-value pairs, making it well-suited for managing configuration data and coordinating distributed systems. Some common use cases for etcd include service discovery, distributed locking, and leader election.
 

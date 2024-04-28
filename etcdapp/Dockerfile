@@ -1,4 +1,4 @@
-FROM eclipse-temurin:19
+FROM eclipse-temurin:21
 COPY target/etcdapp.jar /opt/etcdapp.jar
 RUN useradd -ms /bin/sh notSec2075 \
     && echo "root:Docker!" | chpasswd \
@@ -11,6 +11,6 @@ ENTRYPOINT ["java", "-XX:+UseZGC", "-XX:MinHeapSize=512M", "-XX:InitialHeapSize=
             "-XX:InitiatingHeapOccupancyPercent=35", "-XX:G1HeapRegionSize=16M", \
             "-XX:MinMetaspaceFreeRatio=50", "-XX:MaxMetaspaceFreeRatio=100",  \
             "-XX:+UnlockExperimentalVMOptions", "-XshowSettings:vm" ,"-jar","/opt/etcdapp.jar"]
-EXPOSE 5076
+EXPOSE 5076 6076
 
 

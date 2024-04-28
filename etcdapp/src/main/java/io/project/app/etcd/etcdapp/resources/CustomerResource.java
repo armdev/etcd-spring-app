@@ -6,16 +6,16 @@ import io.project.app.etcd.etcdapp.domain.Customer;
 import io.project.app.etcd.etcdapp.services.CustomerService;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import lombok.AllArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -25,32 +25,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @RequestMapping("/api/v2/customers")
+@AllArgsConstructor
+
 public class CustomerResource {
 
-    @Autowired
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
-    @PostMapping(path = "/create")
-    public ResponseEntity put(@RequestBody Customer customer) {
+    @PostMapping("/create")
+    public ResponseEntity<String> createCustomer(@RequestBody Customer customer) {
         GetResponse updateTopCustomers = customerService.updateTopCustomers(customer);
-        log.info("Controller 1  " + updateTopCustomers.toString());
-        return ResponseEntity.status(HttpStatus.OK).body("Done");
-
+        log.info("Customer created: " + updateTopCustomers.toString());
+        return ResponseEntity.status(HttpStatus.OK).body("Customer created successfully");
     }
 
-    @GetMapping(path = "/find")
-    public ResponseEntity get(@RequestParam String key) {
+    @GetMapping("/find/{key}")
+    public ResponseEntity<String> findCustomerByKey(@PathVariable String key) {
         GetResponse customerData = customerService.findByKey(key);
-        log.info("Controller  " + customerData.toString());
+        log.info("Customer found: " + customerData.toString());
         List<KeyValue> kvs = customerData.getKvs();
         String data = "";
         for (KeyValue kv : kvs) {
-            ///   String ckey = new String(kv.getKey().getBytes(), StandardCharsets.UTF_8);
             data = new String(kv.getValue().getBytes(), StandardCharsets.UTF_8);
         }
-
         return ResponseEntity.status(HttpStatus.OK).body(data);
-
     }
-
 }

@@ -1,4 +1,3 @@
-version: '3'
 services:
   etcdapp:
     image: etcdapp
@@ -6,6 +5,7 @@ services:
     container_name: etcdapp
     ports:
       - "5076:5076"
+      - "6076:6076"
     depends_on:
       - etcd
     environment:

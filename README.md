@@ -1,20 +1,107 @@
 # etcd-spring-app
-spring 3.2.5, etcd, docker compose, java 21
 
-a. ./build.sh
+## Overview
 
-b. ./run.sh
+`etcd-spring-app` is a Spring Boot 3.4.2 application that integrates with [etcd](https://etcd.io/) for distributed key-value storage. It uses Docker for containerization and includes a `docker-compose` configuration for easy setup.
 
-c. http://localhost:5076/swagger-ui.html
+### Tech Stack
+- **Spring Boot** 3.4.2
+- **etcd** for distributed key-value storage
+- **Docker & Docker Compose** for containerized deployment
+- **OpenJDK** 24 (Slim Bookworm)
 
-d. http://localhost:6076/actuator/httpexchanges
+---
 
-# Description
+## 🚀 Getting Started
 
-etcd is commonly used for coordinating distributed systems. It provides a reliable and consistent way to store and retrieve key-value pairs, making it well-suited for managing configuration data and coordinating distributed systems. Some common use cases for etcd include service discovery, distributed locking, and leader election.
+### 1️⃣ Build the Application
+Run the build script to package the application:
+```sh
+./build.sh
+```
 
-One of the key benefits of using etcd for coordinating distributed systems is its strong consistency guarantees. It uses the Raft consensus algorithm to ensure that all nodes in a cluster have a consistent view of the data. This makes it easier to build reliable and fault-tolerant distributed systems.
+### 2️⃣ Run the Application
+Start the application and its dependencies:
+```sh
+./run.sh
+```
 
-In addition to its consistency guarantees, etcd is also highly available and scalable. It can be deployed in a cluster of nodes, with each node holding a copy of the data. If one node fails, the other nodes can continue to serve requests and maintain the consistency of the data.
+### 3️⃣ Access API and Monitoring
+- **Swagger UI**: [http://localhost:5076/swagger-ui.html](http://localhost:5076/swagger-ui.html)  
+- **Actuator HTTP Exchanges**: [http://localhost:6076/actuator/httpexchanges](http://localhost:6076/actuator/httpexchanges)
 
-Overall, etcd is a powerful tool for coordinating distributed systems. Its reliability, consistency, and scalability make it a popular choice for managing configuration data and coordinating services in large-scale deployments.
+---
+
+## 🛠️ Docker Compose Setup
+
+The application runs inside Docker containers using `docker-compose`. Below is the configuration:
+
+```yaml
+services:
+  etcdapp:
+    image: etcdapp
+    build: ./etcdapp
+    container_name: etcdapp
+    ports:
+      - "5076:5076"
+      - "6076:6076"
+    depends_on:
+      - etcd
+    environment:
+      - ETCD_HOST=etcd
+      - ETCD_PORT=2379
+
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.0
+    command: etcd --advertise-client-urls=http://0.0.0.0:2379 --listen-client-urls=http://0.0.0.0:2379
+    volumes:
+      - ~/volumes/data/etcd:/data.etcd
+    ports:
+      - "2379:2379"
+```
+
+---
+
+## 📌 API Usage Examples
+
+### ✅ Store a Key-Value Pair
+```sh
+curl -X 'POST' \
+  'http://localhost:5076/api/v2/customers/create' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "key": "x",
+  "value": "400"
+}'
+```
+
+### 🔍 Retrieve a Value by Key
+```sh
+curl -X 'GET' \
+  'http://localhost:5076/api/v2/customers/find/x' \
+  -H 'accept: */*'
+```
+
+---
+
+## 📖 About etcd
+
+[etcd](https://etcd.io/) is a distributed key-value store designed for high availability and consistency. It is widely used for:
+
+- **Service Discovery** – Keeping track of available services and their metadata
+- **Distributed Locking** – Ensuring safe concurrent operations across nodes
+- **Leader Election** – Managing consensus in distributed environments
+
+### 🔹 Why Use etcd?
+- **Strong Consistency** – Uses the Raft consensus algorithm
+- **Highly Available** – Fault-tolerant with cluster replication
+- **Scalable** – Supports distributed deployments
+
+etcd is a powerful tool for **managing configurations** and **coordinating services** in microservices architectures.
+
+---
+
+## 📝 License
+This project is licensed under [MIT License](LICENSE).
+

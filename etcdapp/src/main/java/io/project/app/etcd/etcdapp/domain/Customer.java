@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Customer implements Serializable{
-    
+public class Customer implements Serializable {
+
     private String key;
-    
+
     private String value;
-    
+
 }
